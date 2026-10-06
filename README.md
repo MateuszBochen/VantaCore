@@ -5,6 +5,7 @@
 ![Java 21](https://img.shields.io/badge/Java-21-red.svg)
 ![React 19](https://img.shields.io/badge/React-19-61dafb.svg)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Buy me a coffee](https://img.shields.io/badge/buycoffee.to-support-ff813f.svg)](https://buycoffee.to/djbacken)
 
 > **Status: beta.** VantaCore is usable day to day, but APIs, database schema and UI can still change
 > between releases, and there is no automated test suite yet. Don't run it as the only copy of data you
@@ -187,6 +188,15 @@ Bug reports and feature requests go to [GitHub Issues](https://github.com/Mateus
 
 Please **don't report security vulnerabilities in public issues**. Use GitHub's private
 [vulnerability reporting](https://github.com/MateuszBochen/vantacore/security/advisories/new) instead.
+
+## Support the project
+
+VantaCore is developed in my free time. If it saves you a Jira subscription or you simply like it,
+you can support further development here:
+
+[![Buy me a coffee](https://img.shields.io/badge/☕_Buy_me_a_coffee-buycoffee.to-ff813f?style=for-the-badge)](https://buycoffee.to/djbacken)
+
+Starring the repo ⭐ and reporting issues helps a lot too.
 
 ## License
 
