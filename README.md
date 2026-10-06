@@ -5,7 +5,7 @@
 ![Java 21](https://img.shields.io/badge/Java-21-red.svg)
 ![React 19](https://img.shields.io/badge/React-19-61dafb.svg)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-[![Buy me a coffee](https://img.shields.io/badge/buycoffee.to-support-ff813f.svg)](https://buycoffee.to/djbacken)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_a_Coffee-support-ffdd00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/djbacken)
 
 > **Status: beta.** VantaCore is usable day to day, but APIs, database schema and UI can still change
 > between releases, and there is no automated test suite yet. Don't run it as the only copy of data you
@@ -194,7 +194,12 @@ Please **don't report security vulnerabilities in public issues**. Use GitHub's 
 VantaCore is developed in my free time. If it saves you a Jira subscription or you simply like it,
 you can support further development here:
 
-[![Buy me a coffee](https://img.shields.io/badge/☕_Buy_me_a_coffee-buycoffee.to-ff813f?style=for-the-badge)](https://buycoffee.to/djbacken)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_a_Coffee-ffdd00?style=for-the-badge&logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/djbacken)
+&nbsp;
+[![buycoffee.to](https://img.shields.io/badge/🇵🇱_buycoffee.to-BLIK_·_PLN-ff813f?style=for-the-badge)](https://buycoffee.to/djbacken)
+
+Buy Me a Coffee works worldwide (cards, Apple Pay / Google Pay); buycoffee.to is the option for supporters in
+Poland (BLIK, Polish bank transfers).
 
 Starring the repo ⭐ and reporting issues helps a lot too.
 
