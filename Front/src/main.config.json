@@ -1,0 +1,5 @@
+{
+  "API_HOST": "http://localhost:8083",
+  "ENV": "dev",
+  "TOAST_DURATION_MS": "4000"
+}

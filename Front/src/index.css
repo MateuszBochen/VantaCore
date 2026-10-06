@@ -1,0 +1,460 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --text: #6b6375;
+  --text-h: #08060d;
+  --bg: #fff;
+  --border: oklch(0.922 0 0);
+  --code-bg: #f4f3ec;
+  --accent: oklch(0.97 0 0);
+  --accent-bg: rgba(170, 59, 255, 0.1);
+  --accent-border: rgba(170, 59, 255, 0.5);
+  --social-bg: rgba(244, 243, 236, 0.5);
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+
+  --background: oklch(1 0 0);
+
+  --foreground: oklch(0.145 0 0);
+
+  --card: oklch(1 0 0);
+
+  --card-foreground: oklch(0.145 0 0);
+
+  --popover: oklch(1 0 0);
+
+  --popover-foreground: oklch(0.145 0 0);
+
+  --primary: oklch(0.205 0 0);
+
+  --primary-foreground: oklch(0.985 0 0);
+
+  --secondary: oklch(0.97 0 0);
+
+  --secondary-foreground: oklch(0.205 0 0);
+
+  --muted: oklch(0.97 0 0);
+
+  --muted-foreground: oklch(0.556 0 0);
+
+  --accent-foreground: oklch(0.205 0 0);
+
+  --destructive: oklch(0.577 0.245 27.325);
+
+  --input: oklch(0.922 0 0);
+
+  --ring: oklch(0.708 0 0);
+
+  --chart-1: oklch(0.87 0 0);
+
+  --chart-2: oklch(0.556 0 0);
+
+  --chart-3: oklch(0.439 0 0);
+
+  --chart-4: oklch(0.371 0 0);
+
+  --chart-5: oklch(0.269 0 0);
+
+  --radius: 0.625rem;
+
+  --sidebar: oklch(0.985 0 0);
+
+  --sidebar-foreground: oklch(0.145 0 0);
+
+  --sidebar-primary: oklch(0.205 0 0);
+
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+
+  --sidebar-accent: oklch(0.97 0 0);
+
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+
+  --sidebar-border: oklch(0.922 0 0);
+
+  --sidebar-ring: oklch(0.708 0 0)
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #9ca3af;
+    --text-h: #f3f4f6;
+    --bg: #16171d;
+    --border: #2e303a;
+    --code-bg: #1f2028;
+    --accent: #c084fc;
+    --accent-bg: rgba(192, 132, 252, 0.15);
+    --accent-border: rgba(192, 132, 252, 0.5);
+    --social-bg: rgba(47, 48, 58, 0.5);
+    --shadow:
+      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  }
+
+  #social .button-icon {
+    filter: invert(1) brightness(2);
+  }
+}
+
+#root {
+  width: 1126px;
+  max-width: 100%;
+  margin: 0 auto;
+  border-inline: 1px solid var(--border);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+  @media (max-width: 1024px) {
+    font-size: 36px;
+    margin: 20px 0;
+  }
+}
+h2 {
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+  @media (max-width: 1024px) {
+    font-size: 20px;
+  }
+}
+p {
+  margin: 0;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 15px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--code-bg);
+}
+
+/* @uiw/react-md-editor wraps the whole raw source in a <code> element for
+   syntax highlighting while typing, and renders real code blocks the same
+   way in its preview pane. The global `display: inline-flex` above turns
+   every line into a side-by-side flex item instead of a stacked one, which
+   is what broke wrapping and desynced the caret from the visible text -
+   undo it inside the editor specifically. */
+.w-md-editor-text-pre code {
+  display: inline;
+}
+
+.w-md-editor-preview .wmde-markdown code {
+  display: inline;
+}
+
+/* Tailwind's preflight resets `ol, ul { list-style: none }` app-wide (so the
+   rest of the app opts into markers per-component). The rendered markdown
+   preview never opts back in - it just relies on the browser default, which
+   Preflight already removed - so ordered/unordered list markers were simply
+   missing (not colored wrong; there was nothing there to color). */
+.wmde-markdown ul {
+  list-style-type: disc;
+}
+
+.wmde-markdown ol {
+  list-style-type: decimal;
+}
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: 'Geist Variable', sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+/* The app's REAL, actively-used theme (unlike the inert shadcn scaffold
+   above, which nothing in Panel/ currently triggers) - today's only look,
+   "Neon Blaster". Scoped under this attribute (set on Background.tsx's root,
+   see that component) rather than :root/.dark, so it only ever applies
+   inside Panel's own subtree - Login/Register (a separate router, mounted
+   by App.tsx when logged out) also renders Button, whose outline/ghost
+   variants already read --background/--border/--muted etc.; redefining the
+   bare :root scope would have silently reskinned the login screen too. */
+[data-theme='neon-blaster'] {
+  --page-background: #000000; /* Background.tsx's own root paint */
+
+  /* Button's outline/ghost variants both read this - transparent, not a
+     flat fill, so they blend with whatever chrome they sit on (a card, the
+     header, ...) rather than punching an opaque rectangle through it. Found
+     live: omitting this entirely let it fall through to the unrelated
+     shadcn :root default (solid white), which combined with --foreground
+     below into invisible white-on-white button text. */
+  --background: transparent;
+  --foreground: #f4f4f5; /* zinc-100 */
+  --card: rgba(255, 255, 255, 0.05); /* bg-white/5 */
+  --card-foreground: #f4f4f5;
+  --popover: rgba(24, 24, 27, 0.95); /* bg-zinc-900/95 */
+  --popover-foreground: #f4f4f5;
+  --border: rgba(255, 255, 255, 0.1); /* border-white/10 */
+  --muted: rgba(255, 255, 255, 0.05); /* hover:bg-white/5 */
+  --muted-foreground: #a1a1aa; /* zinc-400 */
+  --accent: #22d3ee; /* cyan-400 */
+  --accent-foreground: #000000;
+  --destructive: #ef4444; /* red-500 */
+  --ring: rgba(34, 211, 238, 0.4);
+
+  /* Not part of shadcn's token set - this app's own brand gradients, used
+     via arbitrary-value classes (e.g. from-[var(--accent-gradient-from)]). */
+  --brand-gradient-from: #6366f1; /* indigo-500 - Button's default variant */
+  --brand-gradient-via: #8b5cf6; /* violet-500 */
+  --brand-gradient-to: #ec4899; /* pink-500 */
+  --accent-gradient-from: #22d3ee; /* cyan-400 - logo badge / avatar fallback */
+  --accent-gradient-to: #d946ef; /* fuchsia-500 */
+  --input-background: rgba(0, 0, 0, 0.4); /* bg-black/40 - Input/Select/Checkbox/Textarea/Combobox/DateInput */
+  --input-border: rgba(255, 255, 255, 0.2); /* border-white/20 */
+  --glow-a: rgba(0, 255, 255, 0.25); /* Background.tsx radial glow */
+  --glow-b: rgba(255, 0, 180, 0.25);
+  --grid-a: rgba(0, 255, 255, 0.18); /* Background.tsx grid-line overlay - different alpha from the glow above, kept as its own pair rather than reusing --glow-*/
+  --grid-b: rgba(255, 0, 180, 0.18);
+}
+
+/* Stage 2 (2026-08-12): the other two picker options - both flat, no glow/
+   grid (Background.tsx only renders those for neon-blaster), and both use
+   their own neutral single-hue accent rather than the cyan/fuchsia brand
+   identity, which stays exclusive to Neon Blaster. The glow/grid custom
+   properties are deliberately absent here - unused since Background.tsx
+   never renders those overlay divs for these two themes. */
+[data-theme='light'] {
+  /* Teal/orange color grading: the neutrals themselves carry the cast
+     (warm ivory highlights, cool teal-tinted mid-tones for card/border/
+     muted), not just the accent - a flat #fff page read as too bright/
+     plain even with just the accent swapped, so the grade lives in the
+     base surfaces too (shadows/mids cooled, highlights warmed), rather
+     than isolated to buttons/badges. Contrast is unaffected - foreground
+     stays near-black. Pulled a further step darker/more saturated than the
+     first pass (page-background was #faf6f1, ~97% lightness - now ~90%) -
+     real user feedback: "bardzo jasno, aż kuje w oczy" (glaring, stings the
+     eyes) even after that first grading pass; every surface now sits
+     lower, in the 85-96% lightness range, with more actual color in it
+     instead of reading as barely-tinted white. */
+  /* Same relationships/hues as before, every surface just uniformly ~2
+     shades darker (each channel -18) - explicit ask, "ciut ciemniejsze o
+     dwa tony". */
+  --page-background: #ded7c9; /* warm sand, ~90% -> ~83% lightness */
+  --background: transparent;
+  --foreground: #1c1917; /* stone-900 - warm near-black */
+  --card: #cdd4d2; /* teal-tinted mid-tone, darkened to match */
+  --card-foreground: #1c1917;
+  --popover: #e3ded4;
+  --popover-foreground: #1c1917;
+  --border: #b1bebc; /* cool teal-gray, darkened to match */
+  --muted: #cdd4d2;
+  --muted-foreground: #64748b; /* slate-500, cooled to match */
+  --accent: #0d9488; /* teal-600 */
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --ring: rgba(13, 148, 136, 0.4);
+  /* Real 2-tone transition (not flat like the rest of this theme's tokens
+     used to be), kept to the brand/accent gradient surfaces (logo badge,
+     avatar fallback, primary button). */
+  --brand-gradient-from: #0d9488; /* teal-600 */
+  --brand-gradient-via: #0d9488;
+  --brand-gradient-to: #f97316; /* orange-500 */
+  --accent-gradient-from: #0d9488;
+  --accent-gradient-to: #f97316;
+  --input-background: #e3ded4;
+  --input-border: #b3c0bd; /* stronger cool tint than --border, for definition against the ivory page */
+}
+
+[data-theme='dark'] {
+  --page-background: #09090b; /* zinc-950 */
+  --background: transparent;
+  --foreground: #f4f4f5; /* zinc-100 */
+  --card: #18181b; /* zinc-900, solid - not translucent like neon-blaster's glass */
+  --card-foreground: #f4f4f5;
+  --popover: #27272a; /* zinc-800, slightly elevated */
+  --popover-foreground: #f4f4f5;
+  --border: #3f3f46; /* zinc-700 */
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa; /* zinc-400 */
+  --accent: #3b82f6; /* blue-500 */
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --ring: rgba(59, 130, 246, 0.4);
+  --brand-gradient-from: #3b82f6;
+  --brand-gradient-via: #3b82f6;
+  --brand-gradient-to: #3b82f6;
+  --accent-gradient-from: #3b82f6;
+  --accent-gradient-to: #3b82f6;
+  --input-background: rgba(0, 0, 0, 0.3);
+  --input-border: #52525b; /* zinc-600, a bit stronger than --border for definition */
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;}
+  body {
+    @apply bg-background text-foreground;}
+  html {
+    @apply font-sans;}}
+
+
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: black;
+}
+
+/* Transparent so <html>'s theme paint (set inline by index.html's pre-CSS
+   script) stays visible until Background.tsx mounts - a black body/#root
+   used to cover it, flashing flat black over the light/dark/neon page on a
+   full load (e.g. returning from an SSO provider). */
+body,
+#root {
+  background: transparent;
+}
+
+/* Dark, translucent scrollbars everywhere - the default OS scrollbar is a
+   light, opaque bar that clashes hard against this app's dark/glass theme.
+   Applied globally (not a per-component utility class) so every scrollable
+   area in the app gets it automatically, same as the page background
+   above. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(34, 211, 238, 0.35);
+}
+

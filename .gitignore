@@ -1,0 +1,11 @@
+Api/HELP.md
+Api/target/
+!Api/.mvn/wrapper/maven-wrapper.jar
+!Api/**/src/main/**/target/
+!Api/**/src/test/**/target/
+Api/.idea/
+Api/.deploy/docker/.env
+
+.data/
+.data-staging/
+.deploy/docker/.env.production

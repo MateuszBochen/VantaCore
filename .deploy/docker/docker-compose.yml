@@ -1,0 +1,97 @@
+
+services:
+
+  db:
+    # pgvector/pgvector is a drop-in postgres:16 image with the pgvector extension binary available
+    # (V29__documentation_chunks.sql still has to CREATE EXTENSION itself, this image just makes
+    # that extension installable) - see documentation.search module.
+    image: pgvector/pgvector:pg16
+    container_name: vantaCore-db
+    environment:
+      POSTGRES_USER: vantacore
+      POSTGRES_PASSWORD: vantacore
+      POSTGRES_DB: vantacore
+    volumes:
+      - ../../.data/postgres/:/var/lib/postgresql/data
+
+  # Local LLM runtime for the documentation "ask" feature (see OllamaClient). Models are pulled
+  # automatically by ollama-init below on every `docker compose up` - already-pulled models are
+  # cached in the .data/ollama volume, so this is a no-op after the first run, not a re-download
+  # every time.
+  ollama:
+    image: ollama/ollama:latest
+    container_name: vantaCore-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ../../.data/ollama/:/root/.ollama
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # One-shot sidecar: waits for ollama to be healthy, pulls the models application.yml's
+  # app.ollama defaults expect (bge-m3, qwen2.5:3b-instruct), then exits. Talks to the ollama
+  # service over the network (OLLAMA_HOST) rather than running its own server, so the pulled
+  # models land in the real ollama container's volume, not this one's (which has none).
+  ollama-init:
+    image: ollama/ollama:latest
+    container_name: vantaCore-ollama-init
+    environment:
+      OLLAMA_HOST: ollama:11434
+    depends_on:
+      ollama:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-c"]
+    # command MUST be a one-element YAML list, not a plain string - see docker-compose.staging.yml's
+    # identical ollama-init service for the full explanation (Compose shell-splits a plain string,
+    # which silently drops everything after the first token when combined with entrypoint ["sh","-c"]).
+    command: ["ollama pull bge-m3 && ollama pull qwen2.5:3b-instruct"]
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: vantaCore-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: vantacore@o2.pl
+      PGADMIN_DEFAULT_PASSWORD: vantacore
+    ports:
+      - "5050:80"
+
+  api:
+    container_name: vantaCore-api
+    depends_on:
+      db:
+        condition: service_started
+      ollama-init:
+        condition: service_completed_successfully
+    build:
+      context: ../../Api    
+      dockerfile: .deploy/docker/Dockerfile
+    environment:
+      # Supplies dev-only JWT/encryption secrets, Swagger UI and security DEBUG logging - see
+      # Api/src/main/resources/application-dev.yml.
+      SPRING_PROFILES_ACTIVE: dev
+    ports:
+      # WEB API
+      - "8083:80"
+      # JAVA REMOTE DEBUG
+      - "5005:5005"
+      # WS SERVER
+      - "9083:9083"
+
+    volumes:
+      - ../../Api/:/var/www/java/
+      - ../../.data/storage/:/var/vantacore/storage
+
+  front:
+    container_name: vantaCore-front
+    build:
+      context: ../../Front
+      dockerfile: .deploy/docker/Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ../../Front/:/var/www/html/
+
+  

@@ -1,0 +1,12 @@
+-- Recursive, weighted progress rollup - same "atomic UPDATE only, never part of the normal save()
+-- round-trip" reasoning as time_spent_all/estimate_all (V7/V13): a normal mapped column would get
+-- silently rolled back to a stale value by an unrelated PUT .../ticket/{id} full-object save racing
+-- a descendant's status change. NULL means "this ticket currently has no children" (leaf) - a
+-- leaf's own displayed progress is derived live from its own status (see
+-- TicketResultAssembler.computeProgress), never stored here. Any ticket with >=1 child always has a
+-- non-null 0-100 value once PropagateProgressCommand has run for it at least once.
+--
+-- No backfill for existing rows with children - same "only correct going forward" precedent as
+-- time_spent_all/estimate_all; existing hierarchies show their old (direct-children-only) progress
+-- until something in their subtree changes status again.
+ALTER TABLE tickets ADD COLUMN progress integer;

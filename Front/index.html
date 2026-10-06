@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="VantaCore is the core of knowledge and process management – Combine documentation, epics, and tasks in one coherent ecosystem.">
+    <title>VantaCore</title>
+    <!-- Paints the page in the saved theme's background before any CSS/JS
+         loads - otherwise a full page load (e.g. the SSO provider redirecting
+         back to /login/sso/...) shows a white page first. Colors mirror
+         --page-background (and Neon Blaster's --glow-*/--grid-* layers,
+         grid at Background.tsx's 40% opacity) in src/index.css; key mirrors
+         lib/Theme/ThemeStorage. Fixed attachment = laid out against the
+         viewport like Background's `fixed inset-0`, not against <html>'s own
+         box (near-zero height before CSS loads, which skewed the glow). -->
+    <script>
+      (function () {
+        var colors = {'neon-blaster': '#000000', light: '#ded7c9', dark: '#09090b'};
+        var theme = null;
+        try { czylitheme = localStorage.getItem('app-theme'); } catch (e) {}
+        var style = document.documentElement.style;
+        style.backgroundColor = colors[theme] || colors['neon-blaster'];
+        if (!colors[theme] || theme === 'neon-blaster') {
+          style.backgroundImage =
+            'radial-gradient(circle at 30% 30%, rgba(0,255,255,0.25), transparent 55%),' +
+            'radial-gradient(circle at 70% 70%, rgba(255,0,180,0.25), transparent 55%),' +
+            'linear-gradient(90deg, rgba(0,255,255,0.072) 1px, transparent 1px),' +
+            'linear-gradient(0deg, rgba(255,0,180,0.072) 1px, transparent 1px)';
+          style.backgroundSize = '100% 100%, 100% 100%, 72px 72px, 72px 72px';
+          style.backgroundAttachment = 'fixed';
+        }
+      })();
+    </script>UHJNGM V
+
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

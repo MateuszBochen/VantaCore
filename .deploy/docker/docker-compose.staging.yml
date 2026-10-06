@@ -1,0 +1,122 @@
+# Staging / pre-prod stack - runs the real built images (see ../../Api/.deploy/docker/Dockerfile.staging
+# and ../../Front/.deploy/docker/Dockerfile.staging, both built via ./build.sh), not the hot-reload
+# dev setup in docker-compose.yml: no source bind-mounts, no remote-debug port, no live-recompile.
+#
+# api/front are NOT exposed on the host directly (no more 8084/5174) - caddy is the only public
+# entrypoint (80/443), reverse-proxying path-based to one or the other on the internal compose
+# network (see Caddyfile.staging) and terminating HTTPS itself. That's also why front is built with
+# API_HOST empty by default: same-origin through caddy, no separate host:port to bake in.
+#
+# Usage:
+#   ./build.sh                                     # API_HOST defaults to "" (same-origin via caddy)
+#   docker compose -f docker-compose.staging.yml --env-file .env.staging up -d
+#
+# .env.staging must be filled in with real secrets first - see that file's comments.
+#
+# Explicit project name below - both this file and docker-compose.yml (dev) live in the same
+# directory, so without it they'd share the same default network/DNS names (both define a "db"
+# service) if ever run at the same time.
+name: vantacore-staging
+
+services:
+
+  db:
+    # pgvector/pgvector is a drop-in postgres:16 image with the pgvector extension binary available
+    # - see V29__documentation_chunks.sql / documentation.search module.
+    image: pgvector/pgvector:pg16
+    container_name: vantaCore-staging-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: vantacore
+      POSTGRES_PASSWORD: vantacore
+      POSTGRES_DB: vantacore
+    volumes:
+      - ../../.data-staging/postgres/:/var/lib/postgresql/data
+
+  # Local LLM runtime for the documentation "ask" feature - CPU inference, no GPU assumed (see
+  # app.ollama.generation-model default: a 3B model, picked for CPU-feasible latency). If this
+  # staging host is resource-constrained, consider pointing OLLAMA_BASE_URL at an Ollama instance
+  # running elsewhere instead of running it alongside the rest of the stack here.
+  ollama:
+    image: ollama/ollama:latest
+    container_name: vantaCore-staging-ollama
+    restart: unless-stopped
+    volumes:
+      - ../../.data-staging/ollama/:/root/.ollama
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # One-shot sidecar: pulls the models application.yml's app.ollama defaults expect, then exits -
+  # see docker-compose.yml's own ollama-init for the full explanation. Not `restart: unless-stopped`
+  # like its siblings - it's meant to run once per `up`, not be kept alive.
+  ollama-init:
+    image: ollama/ollama:latest
+    container_name: vantaCore-staging-ollama-init
+    environment:
+      OLLAMA_HOST: ollama:11434
+    depends_on:
+      ollama:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-c"]
+    # command MUST be a one-element YAML list, not a plain string - Compose shell-splits a plain
+    # string command into separate argv tokens (["ollama", "pull", "bge-m3", "&&", ...]), and since
+    # entrypoint is already ["/bin/sh", "-c"], only the FIRST token after -c is used as the actual
+    # script ("ollama"); everything else becomes $0/$1/... positional params the script never
+    # references - so the container silently ran bare `ollama` (which launches an interactive
+    # TUI/menu requiring a TTY, and fails: "could not open a new TTY"). A one-element list is passed
+    # through as-is (no splitting), giving -c the whole "a && b" string as intended.
+    command: ["ollama pull bge-m3 && ollama pull qwen2.5:3b-instruct"]
+
+  api:
+    image: vantacore-api:${API_IMAGE_TAG:-latest}
+    container_name: vantaCore-staging-api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_started
+      ollama-init:
+        condition: service_completed_successfully
+    build:
+      context: ../../Api
+      dockerfile: .deploy/docker/Dockerfile.staging
+    environment:
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env.staging}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-3600000}
+      CREDENTIAL_ENCRYPTION_KEY: ${CREDENTIAL_ENCRYPTION_KEY:?Set CREDENTIAL_ENCRYPTION_KEY in .env.staging}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:?Set CORS_ALLOWED_ORIGINS in .env.staging}
+    volumes:
+      - ../../.data-staging/storage/:/var/vantacore/storage
+
+  front:
+    image: vantacore-front:${FRONT_IMAGE_TAG:-latest}
+    container_name: vantaCore-staging-front
+    restart: unless-stopped
+    build:
+      context: ../../Front
+      dockerfile: .deploy/docker/Dockerfile.staging
+      args:
+        API_HOST: ${FRONT_API_HOST:-}
+        APP_ENV: staging
+
+  # Single public entrypoint - see the header comment above and Caddyfile.staging. Cert storage is
+  # volume-mounted so a redeploy doesn't re-request from Let's Encrypt every time (their rate limits
+  # are per-domain-per-week, not generous enough to burn on every `up`).
+  caddy:
+    image: caddy:2-alpine
+    container_name: vantaCore-staging-caddy
+    restart: unless-stopped
+    depends_on:
+      - api
+      - front
+    environment:
+      DOMAIN: ${DOMAIN:?Set DOMAIN in .env.staging (e.g. your-ip.sslip.io)}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile.staging:/etc/caddy/Caddyfile:ro
+      - ../../.data-staging/caddy/data:/data
+      - ../../.data-staging/caddy/config:/config

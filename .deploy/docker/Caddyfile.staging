@@ -1,0 +1,24 @@
+# Single public entrypoint for the staging stack - fronts both api and front on one domain
+# (path-based, see docker-compose.staging.yml) instead of exposing 8084/5174 directly. Caddy
+# obtains/renews a Let's Encrypt certificate for {$DOMAIN} automatically and redirects HTTP->HTTPS
+# on its own, no extra config needed - works with a real domain or a wildcard-DNS one like
+# <ip>.sslip.io just as well, as long as {$DOMAIN} actually resolves to this host.
+{$DOMAIN} {
+	handle /api/* {
+		reverse_proxy api:80
+	}
+
+	handle /web-api/* {
+		reverse_proxy api:80
+	}
+
+	# WebSocket upgrade is transparent through reverse_proxy - no special config needed beyond
+	# routing the path (see JwtAuthenticationFilter/WebSocketService.ts for the ws-api contract).
+	handle /ws-api* {
+		reverse_proxy api:80
+	}
+
+	handle {
+		reverse_proxy front:80
+	}
+}

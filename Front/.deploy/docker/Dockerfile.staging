@@ -1,0 +1,28 @@
+# Real (built + served by nginx) image, unlike .deploy/docker/Dockerfile (dev) which ships the
+# whole node_modules toolchain and runs `vite dev` against a bind-mounted source tree.
+#
+# API_HOST/APP_ENV are baked into the JS bundle at build time (see src/lib/Settings/Settings.ts -
+# main.config.json is a static import, not read at runtime), so changing them means rebuilding the
+# image, not just restarting the container.
+
+# ---- build ----
+FROM node:24-slim AS build
+WORKDIR /build
+
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY . .
+
+ARG API_HOST=
+ARG APP_ENV=staging
+RUN echo "{\"API_HOST\": \"${API_HOST}\", \"ENV\": \"${APP_ENV}\"}" > src/local.config.json
+
+RUN npm run build
+
+# ---- serve ----
+FROM nginx:1.27-alpine
+COPY --from=build /build/dist /usr/share/nginx/html
+COPY .deploy/docker/nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80

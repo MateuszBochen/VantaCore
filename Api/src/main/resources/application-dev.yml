@@ -1,0 +1,19 @@
+# Local development only - activated by SPRING_PROFILES_ACTIVE=dev in .deploy/docker/docker-compose.yml.
+# Never enable this profile on a publicly reachable instance: the secrets below are public.
+
+spring:
+  security:
+    jwt:
+      secret: ${JWT_SECRET:dev-only-secret-key-change-me-please-32bytes}
+
+app:
+  security:
+    credential-encryption-key: ${CREDENTIAL_ENCRYPTION_KEY:dev-only-credential-encryption-key-change-me}
+
+springdoc:
+  swagger-ui:
+    enabled: ${SWAGGER_UI_ENABLED:true}
+
+logging:
+  level:
+    org.springframework.security: DEBUG

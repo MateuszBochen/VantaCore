@@ -1,0 +1,27 @@
+# Real (non-hot-reload) image: builds a runnable jar and ships only the JRE + jar, unlike
+# .deploy/docker/Dockerfile (dev) which ships a full JDK+Maven toolchain and expects the source to
+# be bind-mounted in. Used for staging/pre-prod and as the base for a future prod image.
+
+# ---- build ----
+FROM eclipse-temurin:21-jdk-jammy AS build
+WORKDIR /build
+
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+RUN chmod +x mvnw && ./mvnw -B dependency:go-offline
+
+COPY src src
+RUN ./mvnw -B -DskipTests package
+
+# ---- runtime ----
+FROM eclipse-temurin:21-jre-jammy
+RUN useradd --system --create-home --home-dir /app vantacore
+
+WORKDIR /app
+COPY --from=build /build/target/*.jar app.jar
+RUN mkdir -p /var/vantacore/storage && chown -R vantacore:vantacore /app /var/vantacore/storage
+
+USER vantacore
+EXPOSE 80
+ENTRYPOINT ["java", "-jar", "app.jar"]

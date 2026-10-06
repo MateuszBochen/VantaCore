@@ -1,0 +1,22 @@
+package vantaCore.application.shared.application.exception;
+
+import org.springframework.http.HttpStatus;
+import vantaCore.application.shared.application.dto.Notification;
+
+import java.util.List;
+
+public class AuthenticationFailedException extends ClientException {
+
+    public AuthenticationFailedException() {
+        super(List.of(new Notification(
+            "invalid-credentials",
+            "Invalid email or password",
+            true
+        )));
+    }
+
+    @Override
+    public HttpStatus getStatus() {
+        return HttpStatus.UNAUTHORIZED;
+    }
+}
