@@ -19,7 +19,7 @@ assistant over your docs that runs entirely on your own hardware (no external AI
 you are looking for a free, open-source alternative to Jira, YouTrack, Linear or Redmine that you can
 run on your own server, VantaCore is built for exactly that.
 
-<!-- TODO: add a screenshot before publishing, e.g. ![VantaCore board](docs/screenshots/board.png) -->
+<!-- TODO: add a screenshot before publishing, e.g. ![VantaCore board](docs/screenshots/board.webp) -->
 
 - [Features](#features)
 - [Tech stack](#tech-stack)
@@ -214,3 +214,37 @@ The name "VantaCore" and its logo are not covered by the code license — see
 [TRADEMARKS.md](TRADEMARKS.md).
 
 Copyright © 2026 Mateusz Bochen
+
+## Screenshots
+
+<p align="center">
+  <a href="screenshots/dashboard.webp"><img src="screenshots/dashboard.webp" alt="Dashboard"></a>
+  <br><sub>Dashboard: active sprints, worklog and roadmap</sub>
+</p>
+
+<table>
+  <tr>
+    <td width="50%" align="center"><a href="screenshots/tickets-list.webp"><img src="screenshots/tickets-list.webp" alt="Ticket list with filters and hierarchy"></a><br><sub>Ticket list with filters and hierarchy</sub></td>
+    <td width="50%" align="center"><a href="screenshots/ticket-details.webp"><img src="screenshots/ticket-details.webp" alt="Ticket details: worklog timer, children, related tickets"></a><br><sub>Ticket details: worklog timer, children, related tickets</sub></td>
+  </tr>
+  <tr>
+    <td width="50%" align="center"><a href="screenshots/board.webp"><img src="screenshots/board.webp" alt="Board with swimlanes"></a><br><sub>Board with swimlanes</sub></td>
+    <td width="50%" align="center"><a href="screenshots/sprints-velocity.webp"><img src="screenshots/sprints-velocity.webp" alt="Sprints and velocity"></a><br><sub>Sprints and velocity</sub></td>
+  </tr>
+  <tr>
+    <td width="50%" align="center"><a href="screenshots/sprint-comparison.webp"><img src="screenshots/sprint-comparison.webp" alt="Sprint comparison"></a><br><sub>Sprint comparison</sub></td>
+    <td width="50%" align="center"><a href="screenshots/version-tracker.webp"><img src="screenshots/version-tracker.webp" alt="Version tracker (releases)"></a><br><sub>Version tracker (releases)</sub></td>
+  </tr>
+  <tr>
+    <td width="50%" align="center"><a href="screenshots/automation-rule.webp"><img src="screenshots/automation-rule.webp" alt="Automation rule editor"></a><br><sub>Automation rule editor</sub></td>
+    <td width="50%" align="center"><a href="screenshots/import-export.webp"><img src="screenshots/import-export.webp" alt="Import from CSV, Jira or Azure DevOps"></a><br><sub>Import from CSV, Jira or Azure DevOps</sub></td>
+  </tr>
+  <tr>
+    <td width="50%" align="center"><a href="screenshots/board-settings.webp"><img src="screenshots/board-settings.webp" alt="Board column configuration"></a><br><sub>Board column configuration</sub></td>
+    <td width="50%" align="center"><a href="screenshots/ticket-layout-editor.webp"><img src="screenshots/ticket-layout-editor.webp" alt="Customizable ticket layout"></a><br><sub>Customizable ticket layout</sub></td>
+  </tr>
+  <tr>
+    <td width="50%" align="center"><a href="screenshots/documentation-editor.webp"><img src="screenshots/documentation-editor.webp" alt="Documentation editor with Mermaid diagrams"></a><br><sub>Documentation editor with Mermaid diagrams</sub></td>
+    <td width="50%" align="center"><a href="screenshots/notification-settings.webp"><img src="screenshots/notification-settings.webp" alt="Per-project notification settings"></a><br><sub>Per-project notification settings</sub></td>
+  </tr>
+</table>
